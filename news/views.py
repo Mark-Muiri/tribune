@@ -2,12 +2,15 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse,Http404
 import datetime as dt
 from .models import Article
+
 # Create your views here.
 def welcome(request):
     return render(request,'welcome.html')
+
 def news_of_day(request):
     date = dt.date.today()
     return render(request, 'all-news/today-news.html', {"date": date,})
+
     # FUNCTION TO CONVERT OBJECT TO FIND EXACT DAY
     day = convert_dates(date)
     html = f'''
@@ -18,6 +21,7 @@ def news_of_day(request):
         <html>
             '''
     return HttpResponse(html)
+
 def convert_dates(dates):
     # Function that gets the weekday number for the date.
     day_number = dt.date.weekday(dates)
@@ -25,6 +29,7 @@ def convert_dates(dates):
     # Returning the actual day of the week
     day = days[day_number]
     return day
+
 def past_days_news(request,past_date):
     try:
         # Converts data from the string Url
@@ -44,6 +49,7 @@ def past_days_news(request,past_date):
         </html>
             '''
     return HttpResponse(html)
+
 def news_today(request):
     date = dt.date.today()
     news = Article.todays_news()
@@ -60,6 +66,7 @@ def past_days_news(request, past_date):
         return redirect(news_today)
     news = Article.days_news(date)
     return render(request, 'all-news/past-news.html',{"date": date,"news":news})
+    
 def search_results(request):
     if 'article' in request.GET and request.GET["article"]:
         search_term = request.GET.get("article")
